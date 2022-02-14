@@ -7,7 +7,8 @@
 <style>
 html,
 body{
-    margin: 0
+    margin: 0;
+    font-size: 14px;
 }
 
 a{
@@ -17,5 +18,8 @@ a{
 #app{
     height: 100vh;
     overflow: hidden;
+}
+.mb-20{
+    margin-bottom: 20px;
 }
 </style>

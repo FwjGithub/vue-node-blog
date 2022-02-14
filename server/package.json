@@ -1,0 +1,29 @@
+{
+  "name": "personalblog",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon -x npm run server",
+    "server": "node --inspect index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FwjGithub/PersonalBlog.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FwjGithub/PersonalBlog/issues"
+  },
+  "homepage": "https://github.com/FwjGithub/PersonalBlog#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "moment": "^2.29.1",
+    "mysql2": "^2.2.5",
+    "svg-captcha": "^1.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  }
+}

@@ -1,5 +1,7 @@
 <template>
     <div class="home">
+
+        
         <el-container>
             <el-aside width="200px">
                 <Aside />
@@ -28,6 +30,7 @@ export default {
     background-color: #d3dce6;
     color: #333;
     height: 100vh;
+    overflow: scroll;
 }
 
 .el-main {
@@ -36,6 +39,5 @@ export default {
     height: 100vh;
     overflow: scroll;
     box-sizing: border-box;
-    padding: 50px;
 }
 </style>
