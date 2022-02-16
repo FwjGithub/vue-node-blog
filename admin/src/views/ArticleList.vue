@@ -1,18 +1,14 @@
 <template>
     <div class="article-table">
-        <el-table
-            :data="
-                tableData.filter(
-                    (data) =>
-                        !search ||
-                        data.name.toLowerCase().includes(search.toLowerCase())
-                )
-            "
-            style="width: 100%"
-        >
+        <el-table :data="tableData" style="width: 100%">
             <el-table-column label="封面" prop="poster">
                 <template slot-scope="scope">
-                    <img :src="scope.row.poster" alt="封面图" />
+                    <el-avatar
+                        shape="square"
+                        :size="100"
+                        fit="contain"
+                        :src="scope.row.poster"
+                    ></el-avatar>
                 </template>
             </el-table-column>
             <el-table-column label="标题" prop="title"></el-table-column>
@@ -28,12 +24,13 @@
                     </div>
                 </template>
             </el-table-column>
-            <el-table-column label="发表日期" prop="date"></el-table-column>
+            <el-table-column label="发表日期" prop="cDate"></el-table-column>
 
             <el-table-column align="right">
                 <template slot="header" slot-scope="scope">
                     <el-input
-                        v-model="search"
+                        v-model="searchCondition.key"
+                        @change="searchArticle"
                         size="mini"
                         placeholder="输入关键字搜索"
                     />
@@ -53,17 +50,22 @@
                 </template>
             </el-table-column>
         </el-table>
-        <!-- <div class="pagination"> -->
-            <el-pagination
-                :page-size="100"
-                layout="prev, pager, next, jumper"
-                :total="1000"
-            ></el-pagination>
-        <!-- </div> -->
+        <el-pagination
+            :page-size="searchCondition.limit"
+            layout="prev, pager, next, jumper"
+            :total="total"
+            :current-page="searchCondition.page"
+            @current-change="handleChange"
+            @prev-click="handleChange"
+            @next-click="handleChange"
+        ></el-pagination>
     </div>
 </template>
 
 <script>
+import axios from "axios";
+import moment from "moment";
+import * as ArticleAjax from "../ajax/article";
 export default {
     data() {
         return {
@@ -97,17 +99,75 @@ export default {
                     poster: "",
                 },
             ],
-            search: "",
+            searchCondition: {
+                key: "", //关键词
+                page: 1, //当前页
+                limit: 5, //每页文章数
+            },
+            key: "",
+            page: 1,
+            limit: 5,
+            total: 0,
         };
     },
     methods: {
         handleEdit(index, row) {
             console.log(index, row);
         },
-        handleDelete(index, row) {
-            console.log(index, row);
+        async handleDelete(index, row) {
+            // console.log(row)
+            this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                type: "warning",
+            })
+                .then(async () => {
+                    const { data } = await axios.delete("/admin/article/" + row._id);
+
+                    this.$message({
+                        type: "success",
+                        message: "删除成功!",
+                    });
+                    this.init();
+
+                })
+                .catch(() => {
+                    this.$message({
+                        type: "info",
+                        message: "已取消删除",
+                    });
+                });
         },
-        init() {},
+        async init() {
+            const { data } = await axios.get("/admin/article", {
+                params: this.searchCondition,
+            });
+            // console.log(data);
+            if (!data.code) {
+                console.log(data.err);
+                return;
+            }
+            this.tableData = data.data.map((art) => {
+                art.cDate = moment(art.cDate).format("lll");
+                return art;
+            });
+            this.total = data.count;
+        },
+        async handleChange(cur) {
+            // console.log("改变页数", cur)
+            this.searchCondition.page = cur;
+            const data = await ArticleAjax.findByPage(this.searchCondition);
+
+            this.tableData = data.data;
+            // console.log(this.tableData)
+            this.total = data.count;
+        },
+        async searchArticle() {
+            this.searchCondition.page = 1;
+            const data = await ArticleAjax.findByPage(this.searchCondition);
+            this.tableData = data.data;
+            this.total = data.count;
+        },
     },
     mounted() {
         this.init();
@@ -121,7 +181,7 @@ export default {
     flex-direction: column;
     align-items: center;
 }
-.article-table .el-table{
+.article-table .el-table {
     margin-bottom: 20px;
 }
 </style>

@@ -7,7 +7,7 @@
                     maxlength="15"
                     show-word-limit
                     class="title-input"
-                    v-model="titleData"
+                    v-model="title"
                     placeholder="为文章写上标题吧"
                 ></el-input>
             </div>
@@ -45,7 +45,7 @@ import { mavonEditor } from "mavon-editor";
 import "mavon-editor/dist/css/index.css";
 import UploadPic from "../components/UploadPic.vue";
 import TagsChoose from "../components/TagsChoose.vue";
-
+import axios from "axios";
 export default {
     // 注册
     components: {
@@ -57,9 +57,9 @@ export default {
         return {
             content: "", // 输入的markdown
             html: "", // 及时转的html
-            posterData: "",
-            titleData: "",
-            tagsData: "",
+            poster: "",
+            title: "",
+            tags: "",
         };
     },
     methods: {
@@ -69,19 +69,48 @@ export default {
             this.html = render;
         },
         // 提交
-        submit() {
-            // console.log(this.content);
-            // console.log(this.html);
-            const formdata = { ...this.$data };
-            console.log(formdata);
+        async submit() {
+            const article = {
+                ...this.$data,
+            };
+            if(!article.content || !article.html ||!article.title ||!article.poster ||!article.tags.length) {
+                this.$message({
+                    type: "warning",
+                    message: "请确认是否各部分已经完成"
+                })
+                return
+            }
+            // console.log("文章对象", article);
+            this.$confirm("确认发表文章?", "提示", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                type: "success",
+            })
+                .then(async () => {
+                    const { data } = await axios.post(
+                        "/admin/article",
+                        article
+                    );
+                    this.$message({
+                        type: "success",
+                        message: "发布成功!",
+                    });
+                    this.$router.push("/ArticleList")
+                })
+                .catch(() => {
+                    this.$message({
+                        type: "info",
+                        message: "已取消发布",
+                    });
+                });
         },
         getPoster(base64) {
-            this.posterData = base64;
-            // console.log(this.posterData);
+            this.poster = base64;
+            // console.log(this.poster);
         },
         getTags(tags) {
-            this.tagsData = tags;
-            // console.log(this.posterData);
+            this.tags = tags;
+            // console.log(this.poster);
         },
     },
     mounted() {},
