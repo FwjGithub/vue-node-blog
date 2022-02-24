@@ -1,6 +1,6 @@
 <template>
-  <div class="about">
-      关于博主页
+  <div class="message-board">
+      留言板页
   </div>
 </template>
 

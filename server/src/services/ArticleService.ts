@@ -34,10 +34,16 @@ export default class ArticleService {
             return null;
         } else {
             const result = await ArticleModel.find({
-                title: new RegExp(condition.key),
+                $or: [
+                    { title: new RegExp(condition.key) },
+                    { tags: new RegExp(condition.key) },
+                ],
             })
                 .skip((condition.page - 1) * condition.limit)
-                .limit(condition.limit);
+                .limit(condition.limit)
+                .sort({
+                    uDate: -1,
+                });
             const count = await ArticleModel.find({
                 title: new RegExp(condition.key),
             }).countDocuments();
@@ -56,13 +62,17 @@ export default class ArticleService {
         return true;
     }
 
-    public static async edit(id: string, updateArticle: object): Promise<any> {
+    public static async edit(id: string, updateArticle: any): Promise<any> {
+        updateArticle.uDate = Date.now();
+
         // 首先转换对象
         const article = Article.transform(updateArticle);
 
         // 验证对象
         const errors = await article.validateThis(true);
-        console.log("执行了edit", errors);
+        // console.log("执行了edit", errors);
+
+        // 更新时间要更新
         if (errors.length > 0) {
             console.log("修改出错了");
             return errors;

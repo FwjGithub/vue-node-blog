@@ -10,14 +10,14 @@ async function findByPage(condition) {
     }
     // console.log("请求回来结构的data", data)
     data.data = data.data.map((art) => {
-        art.cDate = moment(art.cDate).format("lll");
-        art.uDate = moment(art.uDate).format("lll");
+        art.cDate = moment(art.cDate).format("L");
+        art.uDate = moment(art.uDate).format("L");
         return art;
     });
     // console.log("转换日期后data：",data)
     return data
 }
 
-export {
+export default {
     findByPage
 }

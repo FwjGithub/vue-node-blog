@@ -25,6 +25,7 @@
                 </template>
             </el-table-column>
             <el-table-column label="发表日期" prop="cDate"></el-table-column>
+            <el-table-column label="最近更新" prop="uDate"></el-table-column>
 
             <el-table-column align="right">
                 <template slot="header" slot-scope="scope">
@@ -112,7 +113,8 @@ export default {
     },
     methods: {
         handleEdit(index, row) {
-            console.log(index, row);
+            // console.log(index, row);
+            this.$router.push('/ArticleEdit/' + row._id  )
         },
         async handleDelete(index, row) {
             // console.log(row)
@@ -139,18 +141,10 @@ export default {
                 });
         },
         async init() {
-            const { data } = await axios.get("/admin/article", {
-                params: this.searchCondition,
-            });
-            // console.log(data);
-            if (!data.code) {
-                console.log(data.err);
-                return;
-            }
-            this.tableData = data.data.map((art) => {
-                art.cDate = moment(art.cDate).format("lll");
-                return art;
-            });
+            const data = await ArticleAjax.findByPage(this.searchCondition);
+
+            this.tableData = data.data;
+            // console.log(this.tableData)
             this.total = data.count;
         },
         async handleChange(cur) {

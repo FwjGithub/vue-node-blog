@@ -13,13 +13,13 @@ router.post(
     async (req, resp): Promise<any> => {
         const imgfile = req.file;
         // console.log(imgfile);
-        const imgPath =
-            path.resolve(__dirname, "../../public/uploadImg/") +
-            Math.random().toLocaleString().slice(2, 10) +
-            imgfile?.originalname;
-        fs.writeFile(imgPath, imgfile?.buffer, () => {
-            console.log("写入成功");
-            ResponseHelper.sendData(imgPath, resp);
+        const imgPath = path.resolve(__dirname, "../../public/pic/i"); // 为了把图片存到pic文件夹，需要再pic后面多谢/和多一个任意字符
+        const hash = Math.random().toLocaleString().slice(2, 10) + imgfile?.originalname;
+        const finalPath = imgPath + hash;
+        const respUrl = "/pic/i" + hash;
+        fs.writeFile(finalPath, imgfile?.buffer, () => {
+            console.log("写入成功", finalPath);
+            ResponseHelper.sendData(respUrl, resp);
         });
     }
 );

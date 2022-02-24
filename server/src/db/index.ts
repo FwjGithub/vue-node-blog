@@ -1,4 +1,5 @@
 import ArticleModel from "./ArticleSchema";
+import UserModel from "./UserSchema";
 import Mongoose from "mongoose";
 
 Mongoose.connect("mongodb://localhost:27017/blogdb", {
@@ -6,4 +7,4 @@ Mongoose.connect("mongodb://localhost:27017/blogdb", {
     useUnifiedTopology: true,
 }).then(() => console.log("连接数据库成功"));
 
-export { ArticleModel };
+export { ArticleModel, UserModel };

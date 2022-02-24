@@ -29,14 +29,27 @@ export default {
         cb: {
             type: Function,
             default: () => {}
+        },
+        tags: {
+            type: Array,
+            default:() => ['知识']
         }
     },
     data() {
         return {
-            dynamicTags: ["知识", "生活"],
             inputVisible: false,
             inputValue: "",
         };
+    },
+    computed: {
+        dynamicTags: {
+            get() {
+                return this.tags;
+            },
+            set() {
+                return this.tags
+            }
+        },
     },
     methods: {
         handleClose(tag) {

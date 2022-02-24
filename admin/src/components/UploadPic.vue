@@ -1,9 +1,10 @@
 <template>
     <el-upload
         class="avatar-uploader"
-        action="https://jsonplaceholder.typicode.com/posts/"
+        action=""
         :show-file-list="false"
-        :on-success="handleAvatarSuccess"
+        :on-change="handleChange"
+        :auto-upload='false'
     >
         <img v-if="imageUrl" :src="imageUrl" class="avatar" />
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -11,41 +12,46 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
     props: {
         cb: {
             type: Function,
             default: () => {},
         },
+        poster: {
+            type: String,
+            default: () => "",
+        },
     },
     data() {
         return {
-            imageUrl: "",
-        };
+            gotImg: ""
+        }
+    },
+    computed: {
+        imageUrl: {
+            get() {
+                return this.poster || this.gotImg;
+            },
+            set(img) {
+                console.log("setter:", img);
+
+                return this.gotImg || this.poster ;
+            },
+        },
     },
     methods: {
-        handleAvatarSuccess(res, file) {
+        handleChange(file) {
             let reader = new FileReader(); //html5读文件
             reader.readAsDataURL(file.raw);
             reader.onload = () => {
-                this.imageUrl = reader.result;
+                this.gotImg = reader.result;
                 // console.log(this.imageUrl);
                 this.cb(this.imageUrl);
             };
-        },
-        beforeAvatarUpload(file) {
-            const isJPG = file.type === "image/jpeg";
-            const isLt2M = file.size / 1024 / 1024 < 2;
-
-            if (!isJPG) {
-                this.$message.error("上传头像图片只能是 JPG 格式!");
-            }
-            if (!isLt2M) {
-                this.$message.error("上传头像图片大小不能超过 2MB!");
-            }
-            return isJPG && isLt2M;
-        },
-    },
+        }
+    }
 };
 </script>
 

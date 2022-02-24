@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Layout from '../Layout/index.vue'
 import ArticleList from '../views/ArticleList.vue'
 import ArticleAdd from '../views/ArticleAdd.vue'
+import ArticleEdit from '../views/ArticleEdit.vue'
 import Home from '../views/Home.vue'
 import UserList from '../views/UserList.vue'
 import UserAdd from '../views/UserAdd.vue'
@@ -24,6 +25,11 @@ const routes = [
                 path: '/ArticleAdd',
                 name: 'ArticleAdd',
                 component: ArticleAdd
+            },
+            {
+                path: '/ArticleEdit/:id',
+                name: 'ArticleEdit',
+                component: ArticleEdit
             },
             {
                 path: '/UserList',

@@ -4,6 +4,10 @@ module.exports = {
     lintOnSave: false, //是否开启eslint
     devServer: {
         proxy: {
+            '/api': {
+                target: 'http://localhost:8888/', //API服务器的地址
+                changeOrigin: true, // 是否跨域
+            },
             '/admin': {
                 target: 'http://localhost:8888/', //API服务器的地址
                 changeOrigin: true, // 是否跨域

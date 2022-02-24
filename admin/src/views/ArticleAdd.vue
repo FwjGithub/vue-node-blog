@@ -25,6 +25,7 @@
                     <mavon-editor
                         v-model="content"
                         ref="md"
+                        @imgAdd="$imgAdd"
                         @change="change"
                         class="md-editor"
                         style="min-height: 700px; width: 100%"
@@ -46,6 +47,7 @@ import "mavon-editor/dist/css/index.css";
 import UploadPic from "../components/UploadPic.vue";
 import TagsChoose from "../components/TagsChoose.vue";
 import axios from "axios";
+import articleUtil from '../utils/article'
 export default {
     // 注册
     components: {
@@ -73,11 +75,7 @@ export default {
             const article = {
                 ...this.$data,
             };
-            if(!article.content || !article.html ||!article.title ||!article.poster ||!article.tags.length) {
-                this.$message({
-                    type: "warning",
-                    message: "请确认是否各部分已经完成"
-                })
+            if(!articleUtil.checkArticleNull(this, article)){
                 return
             }
             // console.log("文章对象", article);
@@ -112,6 +110,29 @@ export default {
             this.tags = tags;
             // console.log(this.poster);
         },
+        $imgAdd(pos, $file){
+            // 第一步.将图片上传到服务器.
+           var formdata = new FormData();
+           formdata.append('imgfile', $file);
+           axios({
+               url: '/admin/upload',
+               method: 'post',
+               data: formdata,
+               headers: { 'Content-Type': 'multipart/form-data' },
+           }).then(({data}) => {
+               // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
+               // $vm.$img2Url 详情见本页末尾
+               if(!data.code) {
+                   this.$message({
+                       type: 'error',
+                       message: data.err
+                   })
+                   return
+               }
+
+               this.$refs.md.$img2Url(pos, data.data);
+           })
+        }
     },
     mounted() {},
 };
