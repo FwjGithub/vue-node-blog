@@ -1,7 +1,7 @@
 <template>
     <div class="article-container">
         <div class="article-header">
-            <h1>文章列表</h1>
+            <h1>最新文章</h1>
             <div>
                 <el-input
                     @change="searchArticle"
@@ -13,37 +13,49 @@
         </div>
         <div class="article-main">
             <div class="article" v-for="arti in articleList">
-                <el-avatar class="arti-left" shape="square" :size="100" fit="contain" :src="arti.poster"></el-avatar>
+                <el-avatar
+                    class="arti-left"
+                    shape="square"
+                    :size="100"
+                    fit="contain"
+                    :src="arti.poster"
+                ></el-avatar>
                 <div class="arti-middle">
-                    <div class="arti-title">标题：{{arti.title}}</div>
+                    <div class="arti-title">标题：{{ arti.title }}</div>
                     <!-- <div class="arti-content"></div> -->
                     <div class="arti-tags">
-                        <el-tag :type="Math.random() > 0.5 ? 'success' : 'primary'" v-for="tag in arti.tags">{{tag}}</el-tag>
+                        <el-tag
+                            :type="Math.random() > 0.5 ? 'success' : 'primary'"
+                            v-for="tag in arti.tags"
+                            >{{ tag }}</el-tag
+                        >
                     </div>
-                    <div class="arti-short el-icon-warning-outline"> 内容已经发布一段时间，其描述的内容与事实可能有所差异 </div>
+                    <div class="arti-short el-icon-warning-outline">
+                        内容已经发布一段时间，其描述的内容与事实可能有所差异
+                    </div>
                 </div>
-                <div class='arti-right'>
-                    <div class="arti-date el-icon-time"> {{arti.uDate}}</div>
-                    <div class="arti-view el-icon-view"> 浏览：{{arti.views}}</div>
+                <div class="arti-right">
+                    <div class="arti-date el-icon-time">{{ arti.uDate }}</div>
+                    <div class="arti-view el-icon-view">
+                        浏览：{{ arti.views }}
+                    </div>
                 </div>
-
             </div>
             <el-pagination
-            :page-size="searchCondition.limit"
-            layout="prev, pager, next, jumper"
-            :total="total"
-            :current-page="searchCondition.page"
-            @current-change="handleChange"
-            @prev-click="handleChange"
-            @next-click="handleChange"
-        ></el-pagination>
+                :page-size="searchCondition.limit"
+                layout="prev, pager, next, jumper"
+                :total="total"
+                :current-page="searchCondition.page"
+                @current-change="handleChange"
+                @prev-click="handleChange"
+                @next-click="handleChange"
+            ></el-pagination>
         </div>
-        
     </div>
 </template>
 
 <script>
-import ArticleAjax from '../ajax/article.js'
+import ArticleAjax from "../ajax/article.js";
 export default {
     name: "ArticleList",
     data() {
@@ -112,9 +124,9 @@ export default {
             searchCondition: {
                 key: "", //关键词
                 page: 1, //当前页
-                limit: 8, //每页文章数
+                limit: 10, //每页文章数
             },
-            total: 0
+            total: 0,
         };
     },
     methods: {
@@ -140,10 +152,10 @@ export default {
             const data = await ArticleAjax.findByPage(this.searchCondition);
             this.articleList = data.data;
             this.total = data.count;
-        }
+        },
     },
     mounted() {
-        this.init()
+        this.init();
     },
 };
 </script>
@@ -154,7 +166,9 @@ export default {
     display: flex;
     flex-direction: column;
     width: 100%;
-
+    /* box-shadow: 2px 2px 10px #abc; */
+    border-radius: 6px;
+    /* overflow: hidden; */
 }
 .article-header {
     font-size: 18px;
@@ -162,9 +176,9 @@ export default {
     height: 12vh;
     line-height: 12vh;
     box-sizing: border-box;
-    padding: 0px 38px;
+    padding-right: 38px;
     justify-content: space-between;
-    background: rgba(255, 255, 255, 0.3);
+    /* background: rgba(255, 255, 255, 0.3); */
 }
 
 .article-main {
@@ -172,27 +186,33 @@ export default {
     flex-direction: column;
     box-sizing: border-box;
     padding: 20px 38px;
-    background: #ede;
+    padding-left: 0;
+    /* background: #ede; */
 }
 .el-pagination {
-    background: #ede;
+    /* background: #ede; */
     align-self: flex-end;
 }
 .article {
     display: flex;
     justify-content: space-around;
     padding: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 3vh;
     border-radius: 6px;
-    background: rgba(255, 255, 255, 0.5);
-
+    background: rgba(222, 222, 222, 0.1);
+    background: rgb(255, 255, 255);
+    box-shadow: 1px 1px 6px #ddd;
+    transition: all 0.3s;
 }
 .article:hover {
     cursor: pointer;
-    transform: scale(1.05);
-    background: rgba(255, 255, 255, 0.8);
+    transform: scale(1.01) translate(-2px, -2px);
+    transition: all 0.3s;
+    background: rgb(255, 255, 255);
+    box-shadow: 2px 2px 8px #abc;
 }
-.arti-left, .arti-right {
+.arti-left,
+.arti-right {
     width: 20%;
 }
 .arti-middle {
