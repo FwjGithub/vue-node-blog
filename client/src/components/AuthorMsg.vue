@@ -16,7 +16,7 @@
                 <span>标签云</span>
             </div>
             <div class="tags-list">
-                <el-tag v-for="tag in tags" class="tag" type="plain" @click="handleTagChoose(tag)">{{
+                <el-tag v-for="(tag,i) in tags" :key="i" class="tag" type="plain" @click="cbChoose(tag)">{{
                     tag
                 }}</el-tag> 
             </div>
@@ -35,36 +35,23 @@
 import ArticleAjax from "../ajax/article.js";
 export default {
     name: "AuthorMsg",
+    props: {
+        cbChoose: Function
+    },
     data() {
         return {
-            searchCondition: {
-                key: "", //关键词
-                page: 1, //当前页
-                limit: 10, //每页文章数
-            },
             tags: [
+                "不分类",
                 "知识",
                 "test",
                 "js",
                 "html",
                 "css",
-                "知识",
-                "test",
-                "js",
-                "html",
-                "css",
-                "知识",
-                "test",
-                "js",
-                "html",
-                "css",
-                "知识",
-                "test",
-                "js",
-                "html",
-                "css",
+                "a",
+                "pic",
+                "生活",
+                "ts"
             ],
-            total: 0,
             calendar: new Date(),
         };
     },
