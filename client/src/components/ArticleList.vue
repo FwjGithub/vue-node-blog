@@ -12,7 +12,7 @@
             </div>
         </div> -->
         <div class="article-main">
-            <div class="article" v-for="(arti,i) in articleList" :key="i">
+            <div class="article" v-for="(arti,i) in articleList" :key="arti._id" @click="handleClick(arti._id)">
                 <el-avatar
                     class="arti-left"
                     shape="square"
@@ -120,6 +120,9 @@ export default {
             this.page = this.arti.page
             this.limit = this.arti.limit
         },
+        async handleClick(_id) {
+            this.$router.push('/Detail/' + _id)
+        }
         // async handleChange(cur) {
         //     this.cbChange(cur)
         // },
@@ -174,7 +177,7 @@ export default {
     justify-content: space-around;
     padding: 10px;
     margin-bottom: 3vh;
-    border-radius: 6px;
+    border-radius: 2px;
     background: rgba(222, 222, 222, 0.1);
     background: rgb(255, 255, 255);
     box-shadow: 1px 1px 6px #ddd;
