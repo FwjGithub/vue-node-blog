@@ -87,6 +87,8 @@ export default {
             if (user) {
                 this.username = user.username;
                 localStorage.setItem('username', this.username)
+                localStorage.setItem('userId', user._id)
+                this.$router.go(0);  
             }
 
             this.isShowLogin = false;

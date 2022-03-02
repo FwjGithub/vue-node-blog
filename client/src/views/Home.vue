@@ -1,7 +1,7 @@
 <template>
     <div class="home">
         <el-image class="bgpic" src="/pic/bgpic1.jpg"></el-image>
-        <div class="content">
+        <div class="home-content">
             <div class="article-container">
                 <div class="article-header">
                     <h1>最新文章</h1>
@@ -106,7 +106,7 @@ export default {
     width: 100%;
     height: 70vh;
 }
-.content {
+.home-content {
     /* background: #eee;
     box-shadow: 2px 2px 10px #abc; */
 

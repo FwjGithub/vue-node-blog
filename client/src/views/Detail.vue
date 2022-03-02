@@ -11,7 +11,6 @@
                 :toolbars="{ navigation: true, readmodel: true }"
                 :edtiable="false"
                 defaultOpen="preview"
-                :navigation="true"
                 class="md-editor"
                 style="min-height: 700px; width: 100%"
             />
@@ -21,7 +20,10 @@
                     <i class="el-icon-view"></i> 浏览： {{ articleObj.views }}
                 </p>
             </div>
+            <comment />
+
         </div>
+
     </div>
 </template>
 
@@ -29,14 +31,14 @@
 import { mavonEditor } from "mavon-editor";
 import "mavon-editor/dist/css/index.css";
 import moment from "moment";
-
+import comment from "../components/Comment";
 export default {
     name: "Detail",
     data() {
         return {
-            id: "",
+            articleId: "",
             articleObj: {},
-            articleMd: "",
+            articleMd: ""
         };
     },
     // computed:{
@@ -48,24 +50,27 @@ export default {
     // },
     components: {
         mavonEditor,
+        comment,
     },
     methods: {
         goBack() {
             this.$router.back();
         },
         async init() {
-            this.id = this.$route.params.id;
+            this.articleId = this.$route.params.id;
             // console.log("_id:", this.id)
-            const { data } = await this.$ajax.get("/admin/article/" + this.id);
+            const { data } = await this.$ajax.get("/admin/article/" + this.articleId);
             if (!data.code) {
-                console.err(data.err);
+                this.$message(data.err);
                 return;
             }
-            console.log("详情数据", data.data);
+            // console.log("详情数据", data.data);
             this.articleObj = data.data;
 
             this.articleObj.uDate = moment(this.articleObj.uDate).format("lll");
             this.articleObj.cDate = moment(this.articleObj.cDate).format("lll");
+
+            
         },
     },
 
@@ -75,14 +80,13 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .bg-container {
     /* min-height: 300vh; */
     width: 100%;
     /* background-image: url("/pic/bgpic1.jpg") ; */
     /* background: rgba(0, 0, 0, .5) url("/pic/bgpic1.jpg")  no-repeat  fixed  top ;
     background-size: cover; */
-    
 }
 .detail-container {
     width: 80vw;

@@ -34,7 +34,7 @@
                 <p>博客概述：由Vue、Node.js编写，包括博客前台页面和后台管理系统，具体分为文章模块、标签模块、用户模块、评论模块等</p>
                 <p>前端部分：前台和后台的界面，均使用Vue、ElementUI完成页面的编写完成</p>
                 <p>后端部分：使用Node.js、typescript、express框架、mongoDB数据库完成</p>
-                <p>源代码地址地址：<el-link type="primary" href="https://github.com/FwjGithub/vue-node-blog">个人博客github</el-link></p>
+                <p>源代码仓库：<el-link type="primary" href="https://github.com/FwjGithub/vue-node-blog">个人博客github</el-link></p>
             </div>
         </div>
     </div>

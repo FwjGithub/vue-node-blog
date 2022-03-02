@@ -19,6 +19,9 @@ h1,p,ul,li {
 li {
     list-style: none;
 }
+.el-message {
+    z-index: 10000 !important;
+}
 #app{
     height: 100vh;
 }
