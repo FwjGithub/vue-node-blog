@@ -1,8 +1,8 @@
 <template>
     <div class="tag-container">
         <el-tag
-            :key="tag"
-            v-for="tag in dynamicTags"
+            :key="i"
+            v-for="(tag, i) in dynamicTags"
             closable
             effect="plain"
             :disable-transitions="false"
@@ -28,6 +28,7 @@ export default {
     props: {
         cb: {
             type: Function,
+            required: false,
             default: () => {}
         },
         tags: {

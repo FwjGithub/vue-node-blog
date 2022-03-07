@@ -80,15 +80,17 @@ export default {
             this.isShowRegister = true;
         },
         handleExit() {
-            localStorage.removeItem('name');
-            this.username = ''
+            localStorage.removeItem('username');
+            localStorage.removeItem('userId');
+            this.username = false
         },
         handleClose(user) {
-            if (user) {
+            if (user && user.username) {
                 this.username = user.username;
-                localStorage.setItem('username', this.username)
+                localStorage.setItem('username', user.username)
                 localStorage.setItem('userId', user._id)
-                this.$router.go(0);  
+                this.curRoute != "/" && this.$router.go(0);  
+                console.log("执行了if", user.username)
             }
 
             this.isShowLogin = false;
@@ -98,7 +100,7 @@ export default {
     mounted() {
         this.curRoute = this.$route.path;
         this.username = localStorage.getItem('username')
-        console.log(this.curRoute);
+        console.log(this.curRoute, this.username);
     },
 };
 </script>

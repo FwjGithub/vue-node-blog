@@ -13,8 +13,22 @@
             </div>
             <div class="tags">
                 <span class="sub-title">文章分类：</span>
-                <tags-choose :cb="getTags"></tags-choose>
+                <!-- <tags-choose :cb="getTags"></tags-choose> -->
+                <el-select
+                    v-model="tags"
+                    multiple
+                    placeholder="请选择文章分类"
+                >
+                    <el-option
+                        v-for="item in options"
+                        :key="item._id"
+                        :label="item.text"
+                        :value="item.text"
+                    >
+                    </el-option>
+                </el-select>
             </div>
+
             <div class="poster">
                 <span class="sub-title">文章封面：</span>
                 <upload-pic :cb="getPoster"></upload-pic>
@@ -47,7 +61,7 @@ import "mavon-editor/dist/css/index.css";
 import UploadPic from "../components/UploadPic.vue";
 import TagsChoose from "../components/TagsChoose.vue";
 import axios from "axios";
-import articleUtil from '../utils/article'
+import articleUtil from "../utils/article";
 export default {
     // 注册
     components: {
@@ -61,7 +75,8 @@ export default {
             html: "", // 及时转的html
             poster: "",
             title: "",
-            tags: "",
+            options: [], // 表示初始化查询到的标签
+            tags: [], // 表示已经选中的标签
         };
     },
     methods: {
@@ -75,8 +90,8 @@ export default {
             const article = {
                 ...this.$data,
             };
-            if(!articleUtil.checkArticleNull(this, article)){
-                return
+            if (!articleUtil.checkArticleNull(this, article)) {
+                return;
             }
             // console.log("文章对象", article);
             this.$confirm("确认发表文章?", "提示", {
@@ -93,7 +108,7 @@ export default {
                         type: "success",
                         message: "发布成功!",
                     });
-                    this.$router.push("/ArticleList")
+                    this.$router.push("/ArticleList");
                 })
                 .catch(() => {
                     this.$message({
@@ -110,31 +125,43 @@ export default {
             this.tags = tags;
             // console.log(this.poster);
         },
-        $imgAdd(pos, $file){
+        $imgAdd(pos, $file) {
             // 第一步.将图片上传到服务器.
-           var formdata = new FormData();
-           formdata.append('imgfile', $file);
-           axios({
-               url: '/admin/upload',
-               method: 'post',
-               data: formdata,
-               headers: { 'Content-Type': 'multipart/form-data' },
-           }).then(({data}) => {
-               // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
-               // $vm.$img2Url 详情见本页末尾
-               if(!data.code) {
-                   this.$message({
-                       type: 'error',
-                       message: data.err
-                   })
-                   return
-               }
+            var formdata = new FormData();
+            formdata.append("imgfile", $file);
+            axios({
+                url: "/admin/upload",
+                method: "post",
+                data: formdata,
+                headers: { "Content-Type": "multipart/form-data" },
+            }).then(({ data }) => {
+                // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
+                // $vm.$img2Url 详情见本页末尾
+                if (!data.code) {
+                    this.$message({
+                        type: "error",
+                        message: data.err,
+                    });
+                    return;
+                }
 
-               this.$refs.md.$img2Url(pos, data.data);
-           })
+                this.$refs.md.$img2Url(pos, data.data);
+            });
+        },
+        async init() {
+            const {data} = await this.$ajax.get('/api/tag');
+            if(!data.code) {
+                this.$message(data.err);
+                // console.log(data);
+                return
+            }
+            // console.log("tags", data.data.data)
+            this.options = data.data.data;
         }
     },
-    mounted() {},
+    mounted() {
+        this.init()
+    },
 };
 </script>
 

@@ -5,7 +5,8 @@ import bodyParser from "body-parser";
 import UploadRoute from "./routes/UploadRoute";
 import UserRoute from "./routes/UserRoute";
 import CommentRoute from "./routes/CommentRoute";
-import Path from 'path';
+import TagRoute from "./routes/TagRoute";
+import Path from "path";
 
 const app = Express();
 /**
@@ -16,7 +17,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 const staticPath = Path.resolve(__dirname, "../public/pic");
 console.log("静态资源路径：", staticPath);
-//请求静态资源
+
+// 请求静态资源
 app.use("/pic", Express.static(staticPath));
 
 // 关于文章模块的请求
@@ -29,7 +31,10 @@ app.use("/admin/upload", UploadRoute);
 app.use("/api/user", UserRoute);
 
 // 评论模块
-app.use("/api/comment", CommentRoute)
+app.use("/api/comment", CommentRoute);
+
+// 评论模块
+app.use("/api/tag", TagRoute);
 
 app.listen(8888, () => {
     console.log("监听端口8888");

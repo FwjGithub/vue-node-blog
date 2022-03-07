@@ -13,6 +13,7 @@ router.post("/", async (req, resp) => {
         ResponseHelper.sendData(result, resp);
     }
 });
+
 router.get("/:id", async (req, resp) => {
     // console.log("id是", req);
 
@@ -26,11 +27,13 @@ router.get("/:id", async (req, resp) => {
         ResponseHelper.sendData(null, resp);
     }
 });
+
 router.delete("/:id", async (req, resp) => {
     console.log("id:", req.params.id)
     await ArticleService.remove(req.params.id);
     ResponseHelper.sendData(true, resp);
 });
+
 router.get("/", async (req, resp) => {
     // console.log(req.query)
     const result = await ArticleService.findByPage(req.query as any);
@@ -40,6 +43,7 @@ router.get("/", async (req, resp) => {
         ResponseHelper.sendError("找不到对应文章", resp);
     }
 });
+
 router.put("/:id", async (req, resp) => {
     // 客户端通过body传一个json对象，用作修改这个文章
     const result = await ArticleService.edit(req.params.id, req.body);

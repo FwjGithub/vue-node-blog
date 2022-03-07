@@ -8,6 +8,7 @@ import Home from '../views/Home.vue'
 import UserList from '../views/UserList.vue'
 import UserAdd from '../views/UserAdd.vue'
 import CommentList from '../views/CommentList.vue'
+import TagList from '../views/TagList.vue'
 
 Vue.use(VueRouter)
 
@@ -45,6 +46,11 @@ const routes = [
                 path: '/CommentList',
                 name: 'CommentList',
                 component: CommentList
+            },
+            {
+                path: '/TagList',
+                name: 'TagList',
+                component: TagList
             },
             {
                 path: '/',

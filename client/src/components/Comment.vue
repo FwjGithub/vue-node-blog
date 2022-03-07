@@ -16,7 +16,7 @@
             </div>
             <div class="content">{{ item.content }}</div>
             <div class="control">
-                <span
+                <!-- <span
                     class="like"
                     :class="{ active: item.isLike }"
                     @click="likeClick(item)"
@@ -25,7 +25,7 @@
                     <span class="like-num">{{
                         item.likeNum > 0 ? item.likeNum + "人赞" : "赞"
                     }}</span>
-                </span>
+                </span> -->
                 <span class="comment-reply" @click="showCommentInput(item)">
                     <i class="iconfont el-icon-s-comment"></i>
                     <span>回复</span>
@@ -340,7 +340,7 @@ export default {
                 }))
                 return item;
             });
-            console.log(this.comments)
+            // console.log(this.comments)
             this.commentsTotal = commentData.data.count;
 
             // console.log("this.comments", this.comments);

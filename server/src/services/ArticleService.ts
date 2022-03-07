@@ -3,6 +3,7 @@ import { ArticleModel } from "../db";
 import { IArticle } from "../db/ArticleSchema";
 import SearchCondition from "../entities/SearchCondition";
 import { ISearchResult } from "../entities/CommonTypes";
+import TagService from "./TagService";
 export default class ArticleService {
     public static async add(art: Article): Promise<IArticle | string[]> {
         const article = Article.transform(art);
@@ -12,11 +13,23 @@ export default class ArticleService {
         if (errors.length > 0) {
             return errors;
         } else {
+            const result = await TagService.addCount(art.tags);
             return await ArticleModel.create(article);
         }
     }
 
     public static async findById(id: string): Promise<IArticle | null> {
+        const result = await ArticleModel.updateOne(
+            {
+                _id: id,
+            },
+            {
+                $inc: {
+                    views: 1
+                }
+            }
+        );
+        console.log("增加views", result);
         return await ArticleModel.findById(id);
     }
 

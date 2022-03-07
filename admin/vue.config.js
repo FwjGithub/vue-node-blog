@@ -8,6 +8,10 @@ module.exports = {
                 target: 'http://localhost:8888/', //API服务器的地址
                 changeOrigin: true, // 是否跨域
             },
+            '/api': {
+                target: 'http://localhost:8888/', //API服务器的地址
+                changeOrigin: true, // 是否跨域
+            },
             '/pic': {
                 target: 'http://localhost:8888/', //API服务器的地址
                 changeOrigin: true, // 是否跨域

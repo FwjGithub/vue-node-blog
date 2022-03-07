@@ -1,6 +1,7 @@
 import { validate } from "class-validator";
 import { plainToClass } from "class-transformer";
 import { ClassType } from "class-transformer/ClassTransformer";
+import { TagModel, UserModel } from "../db";
 
 export default abstract class BaseEntity {
     /**
@@ -18,6 +19,15 @@ export default abstract class BaseEntity {
         return result;
     }
 
+    public static async checkIsExit(
+        model: typeof TagModel | typeof UserModel,
+        condition: object
+    ): Promise<boolean> {
+        const exist = await model.findOne(condition);
+        console.log("exist存在：", exist);
+        return !!exist;
+    }
+
     protected static baseTransform<T>(
         cls: ClassType<T>,
         plainObject: object
@@ -27,9 +37,9 @@ export default abstract class BaseEntity {
             return plainObject;
         }
         let result;
-        if (plainObject === undefined){
+        if (plainObject === undefined) {
             result = plainToClass(cls, {});
-        }else{
+        } else {
             result = plainToClass(cls, plainObject);
         }
         console.log("toclass之后：", result);

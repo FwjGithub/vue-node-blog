@@ -11,13 +11,22 @@
                     placeholder="为文章写上标题吧"
                 ></el-input>
             </div>
-            <div class="tags">
+            <!-- <div class="tags">
                 <span class="sub-title">文章分类：</span>
                 <tags-choose :tags='tags' :cb="getTags"></tags-choose>
-            </div>
+            </div> -->
+            <el-select v-model="choosedTags" multiple placeholder="请选择文章分类">
+                <el-option
+                    v-for="(item, i) in tags"
+                    :key="i"
+                    :label="item"
+                    :value="item"
+                >
+                </el-option>
+            </el-select>
             <div class="poster">
                 <span class="sub-title">文章封面：</span>
-                <upload-pic :poster='poster' :cb="getPoster"></upload-pic>
+                <upload-pic :poster="poster" :cb="getPoster"></upload-pic>
             </div>
             <div class="content">
                 <span class="sub-title">文章内容：</span>
@@ -46,7 +55,7 @@ import "mavon-editor/dist/css/index.css";
 import UploadPic from "../components/UploadPic.vue";
 import TagsChoose from "../components/TagsChoose.vue";
 import axios from "axios";
-import articleUtil from '../utils/article'
+import articleUtil from "../utils/article";
 
 export default {
     // 注册
@@ -62,6 +71,7 @@ export default {
             poster: "",
             title: "",
             tags: [],
+            choosedTags: []
         };
     },
     methods: {
@@ -75,24 +85,27 @@ export default {
             const article = {
                 ...this.$data,
             };
-            if(!articleUtil.checkArticleNull(this, article)){
-                return
+            if (!articleUtil.checkArticleNull(this, article)) {
+                return;
             }
             // console.log("文章对象", article);
-            const { data } = await axios.put("/admin/article/" + this.articleId, article);
+            const { data } = await axios.put(
+                "/admin/article/" + this.articleId,
+                article
+            );
             // console.log(data);
-            if(!data.code) {
+            if (!data.code) {
                 this.$message({
                     type: "error",
-                    message: data.err
-                })
-                return
+                    message: data.err,
+                });
+                return;
             }
             this.$message({
-                    type: "success",
-                    message: "修改成功"
-                })
-            this.$router.push("/ArticleList")
+                type: "success",
+                message: "修改成功",
+            });
+            this.$router.push("/ArticleList");
             return data;
         },
         getPoster(base64) {
@@ -102,26 +115,28 @@ export default {
             this.tags = tags;
         },
         async init() {
-            const {data} = await axios.get('/admin/article/' + this.articleId)
+            const { data } = await axios.get(
+                "/admin/article/" + this.articleId
+            );
             // console.log("查询结果：", data)
-            if(!data.code) {
+            if (!data.code) {
                 this.$message({
                     type: "error",
-                    message: data.err
-                })
-                return
+                    message: data.err,
+                });
+                return;
             }
-            const articleData = data.data
+            const articleData = data.data;
             for (const prop in articleData) {
-                this[prop] = articleData[prop]
+                this[prop] = articleData[prop];
             }
-        }
+        },
     },
     mounted() {
         // console.log("route", this.$route.params.id)
-        this.articleId = this.$route.params.id
+        this.articleId = this.$route.params.id;
 
-        this.init()
+        this.init();
     },
 };
 </script>
