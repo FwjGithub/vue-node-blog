@@ -11,19 +11,23 @@
                     placeholder="为文章写上标题吧"
                 ></el-input>
             </div>
-            <!-- <div class="tags">
+            <div class="tags">
                 <span class="sub-title">文章分类：</span>
-                <tags-choose :tags='tags' :cb="getTags"></tags-choose>
-            </div> -->
-            <el-select v-model="choosedTags" multiple placeholder="请选择文章分类">
-                <el-option
-                    v-for="(item, i) in tags"
-                    :key="i"
-                    :label="item"
-                    :value="item"
+                <!-- <tags-choose :cb="getTags"></tags-choose> -->
+                <el-select
+                    v-model="tags"
+                    multiple
+                    placeholder="请选择文章分类"
                 >
-                </el-option>
-            </el-select>
+                    <el-option
+                        v-for="item in options"
+                        :key="item._id"
+                        :label="item.text"
+                        :value="item.text"
+                    >
+                    </el-option>
+                </el-select>
+            </div>
             <div class="poster">
                 <span class="sub-title">文章封面：</span>
                 <upload-pic :poster="poster" :cb="getPoster"></upload-pic>
@@ -71,7 +75,7 @@ export default {
             poster: "",
             title: "",
             tags: [],
-            choosedTags: []
+            options: []
         };
     },
     methods: {
@@ -130,6 +134,14 @@ export default {
             for (const prop in articleData) {
                 this[prop] = articleData[prop];
             }
+            const tagData = await this.$ajax.get('/api/tag');
+            if(!data.code) {
+                this.$message(data.err);
+                // console.log(data);
+                return
+            }
+            console.log("result：", tagData.data.data.data)
+            this.options = tagData.data.data.data;
         },
     },
     mounted() {

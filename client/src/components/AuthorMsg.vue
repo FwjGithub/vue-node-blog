@@ -56,7 +56,16 @@ export default {
         };
     },
     methods: {
-        async init() {},
+        async init() {
+            const {data} = await this.$ajax.get('/api/tag')
+            if(!data.code) {
+                this.$message("获取标签出错")
+                console.warn("获取标签出错", data)
+                return
+            }
+            // console.log(data.data.data)
+            this.tags = data.data.data.map(item => item.text)
+        },
         async handleChange() {},
         async searchArticle() {},
         async handleTagChoose() {

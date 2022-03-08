@@ -1,5 +1,5 @@
 import Article from "../entities/Article";
-import { ArticleModel } from "../db";
+import { ArticleModel, TagModel } from "../db";
 import { IArticle } from "../db/ArticleSchema";
 import SearchCondition from "../entities/SearchCondition";
 import { ISearchResult } from "../entities/CommonTypes";
@@ -25,8 +25,8 @@ export default class ArticleService {
             },
             {
                 $inc: {
-                    views: 1
-                }
+                    views: 1,
+                },
             }
         );
         console.log("增加views", result);
@@ -69,6 +69,13 @@ export default class ArticleService {
     }
 
     public static async remove(id: string): Promise<boolean> {
+        const result = await ArticleModel.findOne({
+            _id: id,
+        });
+        // const tags = result.tags;
+        // console.log("removeArticle：", result?.tags);
+        // tslint:disable-next-line: no-unused-expression
+        result && TagService.decreaseCount(result.tags);
         await ArticleModel.deleteOne({
             _id: id,
         });
@@ -90,12 +97,22 @@ export default class ArticleService {
             console.log("修改出错了");
             return errors;
         } else {
+            const oldArticle = await ArticleModel.findById(id);
+            // console.log("原文章的标签，", oldArticle?.tags);
+            // console.log("更新文章时候的标签：", article.tags);
+
+            // 要在标签的表中先减少原来的标签的count
+            // tslint:disable-next-line: no-unused-expression
+            oldArticle && TagService.decreaseCount(oldArticle.tags);
+
             const result = await ArticleModel.updateOne(
                 {
                     _id: id,
                 },
                 updateArticle
             );
+            // 然后再增加新文章的标签的count
+            TagService.addCount(article.tags);
             return result;
         }
     }

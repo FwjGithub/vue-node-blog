@@ -38,7 +38,7 @@ export default class TagService {
     }
     public static async removeTag(id: string): Promise<any> {
         const doc = await TagModel.findOne({_id: id});
-        // console.log("删除tag：", doc);
+        console.log("删除tag：", doc);
         if (doc && doc.count > 0) {
             return false;
         }
@@ -48,13 +48,26 @@ export default class TagService {
         return true;
     }
     public static async addCount(arr: string[]): Promise<any> {
-        console.log("增加count");
+        console.log("增加标签的count");
         // tslint:disable-next-line: prefer-for-of
         for (let i = 0; i < arr.length; i++) {
             const text = arr[i];
             await TagModel.updateOne({text}, {
                 $inc: {
                     count: 1
+                }
+            })
+        }
+        return true;
+    }
+    public static async decreaseCount(arr: string[]): Promise<any> {
+        console.log("减少标签的count");
+        // tslint:disable-next-line: prefer-for-of
+        for (let i = 0; i < arr.length; i++) {
+            const text = arr[i];
+            await TagModel.updateOne({text}, {
+                $inc: {
+                    count: -1
                 }
             })
         }
