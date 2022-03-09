@@ -16,10 +16,11 @@
                 <template slot-scope="scope">
                     <div>
                         <el-tag
-                            v-for="i in scope.row.tags"
+                            v-for="item in scope.row.tags"
+                            :key="item._id"
                             :type="Math.random() > 0.5 ? 'primary' : 'success'"
                             disable-transitions
-                            >{{ i }}</el-tag
+                            >{{ item }}</el-tag
                         >
                     </div>
                 </template>

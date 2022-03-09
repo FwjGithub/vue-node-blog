@@ -17,6 +17,7 @@
         "default-passive-events": "^2.0.0",
         "element-ui": "^2.15.6",
         "event-pubsub": "3",
+        "js-md5": "^0.7.3",
         "mavon-editor": "^2.10.4",
         "mime": "^3.0.0",
         "moment": "^2.29.1",

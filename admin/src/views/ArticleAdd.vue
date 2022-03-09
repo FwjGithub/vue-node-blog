@@ -1,5 +1,5 @@
 <template>
-    <keep-alive>
+    <!-- <keep-alive> -->
         <div>
             <div class="title">
                 <span class="sub-title">文章标题：</span>
@@ -52,7 +52,7 @@
                 <el-button type="success" @click="submit">发布</el-button>
             </div>
         </div>
-    </keep-alive>
+    <!-- </keep-alive> -->
 </template>
 
 <script>

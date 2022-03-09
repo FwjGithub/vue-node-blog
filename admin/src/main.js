@@ -6,7 +6,9 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import moment from "moment"
 import axios from 'axios'
+import md5 from 'js-md5';
 Vue.prototype.$ajax = axios
+Vue.prototype.$md5 = md5
 import 'default-passive-events'
 
 moment.locale("zh-cn");

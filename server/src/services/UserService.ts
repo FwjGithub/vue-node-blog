@@ -5,6 +5,12 @@ import SearchCondition from "../entities/SearchCondition";
 import { ISearchResult } from "../entities/CommonTypes";
 export default class UserService {
     public static async register(user: User): Promise<IUser | string[]> {
+        const isExist = await User.checkIsExit(UserModel, {
+            username: user.username,
+        });
+        if (isExist) {
+            return ["用户名已被使用哦~"];
+        }
         const u = User.transform(user);
         const errors = await u.validateThis();
         const isEquals = await u.checkPassword();
@@ -31,10 +37,18 @@ export default class UserService {
         } else if (dbUser.password !== u.password) {
             return ["密码输出不正确"];
         } else {
-            return {
-                username: dbUser.username,
-                _id: dbUser._id,
-            };
+            return dbUser;
+        }
+    }
+    public static async getUser(userId: string): Promise<object | string[]> {
+        const dbUser = await UserModel.findOne({
+            _id: userId,
+        });
+        // console.log(dbUser);
+        if (!dbUser) {
+            return ["用户不存在"];
+        }  else {
+            return dbUser;
         }
     }
     // public static async findById(id: string): Promise<IUser | null> {

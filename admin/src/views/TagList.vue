@@ -12,14 +12,15 @@
             ></el-input>
             <el-button
                 class="button-new-tag"
+                type="primary"
                 v-else
                 size="small"
                 @click="showInput"
                 >+ 新增标签</el-button
             >
         </div>
-        <el-table :data="tagsData" style="width: 100%" center>
-            <el-table-column label="标签">
+        <el-table :data="tagsData" style="width: 100%"  border>
+            <el-table-column align="center" label="标签">
                 <template slot-scope="scope">
                     <el-tag
                         :type="Math.random() > 0.5 ? 'primary' : 'success'"
@@ -28,17 +29,17 @@
                     >
                 </template>
             </el-table-column>
-            <el-table-column label="文章数量" prop="count"></el-table-column>
-            <el-table-column label="创建日期" prop="date"></el-table-column>
-            <el-table-column align="right">
-                <template slot="header" slot-scope="scope">
+            <el-table-column align="center" label="文章数量" prop="count"></el-table-column>
+            <el-table-column align="center" label="创建日期" prop="date"></el-table-column>
+            <el-table-column align="center" label="操作">
+                <!-- <template slot="header" slot-scope="scope">
                     <el-input
                         v-model="searchCondition.key"
                         @change="searchTag"
                         size="mini"
                         placeholder="输入关键字搜索"
                     />
-                </template>
+                </template> -->
                 <template slot-scope="scope">
                     <!-- <el-button
                         size="mini"
@@ -223,7 +224,7 @@ export default {
 
 <style>
 .tag-table {
-    width: 60%;
+    width: 70%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
