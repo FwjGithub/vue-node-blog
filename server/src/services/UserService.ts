@@ -40,15 +40,58 @@ export default class UserService {
             return dbUser;
         }
     }
-    public static async getUser(userId: string): Promise<object | string[]> {
-        const dbUser = await UserModel.findOne({
-            _id: userId,
+    
+    public static async findByPage(
+        conditionObj: SearchCondition
+    ): Promise<ISearchResult<IUser> | null> {
+        const condition = SearchCondition.transform(conditionObj);
+
+        const errors = await condition.validateThis(true);
+        if (errors.length > 0) {
+            return null;
+        } else {
+            const result = await UserModel.find({
+                $or: [
+                    { username: new RegExp(condition.key) },
+                ],
+            })
+                .skip((condition.page - 1) * condition.limit)
+                .limit(condition.limit)
+                .sort({
+                    cDate: -1,
+                });
+            const count = await UserModel.find({
+                username: new RegExp(condition.key),
+            }).countDocuments();
+            return {
+                count,
+                data: result,
+                errors: [],
+            };
+        }
+    }
+    public static async remove(id: string): Promise<boolean> {
+        // const tags = result.tags;
+        // console.log("removeArticle：", result?.tags);
+        // tslint:disable-next-line: no-unused-expression
+        await UserModel.deleteOne({
+            _id: id,
         });
+        return true;
+    }
+    public static async changeAuth(userId: string, newAuth: any): Promise<object | string[]> {
+        newAuth.cDate = Date.now();
+        const result = await UserModel.updateOne(
+            {
+                _id: userId,
+            },
+            newAuth
+        );
         // console.log(dbUser);
-        if (!dbUser) {
+        if (!result) {
             return ["用户不存在"];
         }  else {
-            return dbUser;
+            return result;
         }
     }
     // public static async findById(id: string): Promise<IUser | null> {

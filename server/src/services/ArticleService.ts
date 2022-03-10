@@ -58,7 +58,10 @@ export default class ArticleService {
                     uDate: -1,
                 });
             const count = await ArticleModel.find({
-                title: new RegExp(condition.key),
+                $or: [
+                    { title: new RegExp(condition.key) },
+                    { tags: new RegExp(condition.key) },
+                ],
             }).countDocuments();
             return {
                 count,

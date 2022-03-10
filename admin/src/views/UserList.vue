@@ -68,7 +68,7 @@
 <script>
 import axios from "axios";
 import moment from "moment";
-import * as ArticleAjax from "../ajax/article";
+import * as UserAjax from "../ajax/user";
 export default {
     data() {
         return {
@@ -117,7 +117,7 @@ export default {
             searchCondition: {
                 key: "", //关键词
                 page: 1, //当前页
-                limit: 5, //每页文章数
+                limit: 10, //每页文章数
             },
             total: 0,
         };
@@ -147,7 +147,7 @@ export default {
                 });
         },
         async init() {
-            const data = await ArticleAjax.findByPage(this.searchCondition);
+            const data = await UserAjax.findByPage(this.searchCondition);
 
             this.tableData = data.data;
             // console.log(this.tableData)
@@ -156,7 +156,7 @@ export default {
         async handleChange(cur) {
             // console.log("改变页数", cur)
             this.searchCondition.page = cur;
-            const data = await ArticleAjax.findByPage(this.searchCondition);
+            const data = await UserAjax.findByPage(this.searchCondition);
 
             this.tableData = data.data;
             // console.log(this.tableData)
@@ -164,16 +164,23 @@ export default {
         },
         async searchUser() {
             this.searchCondition.page = 1;
-            const data = await ArticleAjax.findByPage(this.searchCondition);
+            const data = await UserAjax.findByPage(this.searchCondition);
             this.tableData = data.data;
             this.total = data.count;
         },
         async handleSwitch(index, row) {
-            console.log("改变权限：", index, row)
+            // console.log("改变权限：", index, row)
+            const {data} = this.$ajax.put('/api/user/'+ row._id, {
+                isAdmin: row.isAdmin,
+                isSuperAdmin: row.isSuperAdmin
+            })
+            console.log("改变权限：", data)
+
+            // this.init()
         }
     },
     mounted() {
-        // this.init();
+        this.init();
     },
 };
 </script>
