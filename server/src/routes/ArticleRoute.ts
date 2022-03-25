@@ -13,7 +13,15 @@ router.post("/", async (req, resp) => {
         ResponseHelper.sendData(result, resp);
     }
 });
-
+router.get("/hotList", async (req, resp) => {
+    // console.log(req.query)
+    const result = await ArticleService.getHotList();
+    if (result !== null){
+        ResponseHelper.sendData(result, resp);
+    }else{
+        ResponseHelper.sendError("找不到对应文章", resp);
+    }
+});
 router.get("/:id", async (req, resp) => {
     // console.log("id是", req);
 
@@ -33,6 +41,7 @@ router.delete("/:id", async (req, resp) => {
     await ArticleService.remove(req.params.id);
     ResponseHelper.sendData(true, resp);
 });
+
 
 router.get("/", async (req, resp) => {
     // console.log(req.query)

@@ -37,7 +37,7 @@
             router
         >
             <el-menu-item index="/"> 首页 </el-menu-item>
-            <el-menu-item index="/Other"> 拓展页面 </el-menu-item>
+            <!-- <el-menu-item index="/Other"> 拓展页面 </el-menu-item> -->
             <el-menu-item index="/MessageBoard"> 留言板 </el-menu-item>
             <el-menu-item index="/About"> 关于 </el-menu-item>
         </el-menu>

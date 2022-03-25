@@ -6,7 +6,6 @@ import ArticleAdd from '../views/ArticleAdd.vue'
 import ArticleEdit from '../views/ArticleEdit.vue'
 import Home from '../views/Home.vue'
 import UserList from '../views/UserList.vue'
-import UserAdd from '../views/UserAdd.vue'
 import CommentList from '../views/CommentList.vue'
 import TagList from '../views/TagList.vue'
 
@@ -36,11 +35,6 @@ const routes = [
                 path: '/UserList',
                 name: 'UserList',
                 component: UserList
-            },
-            {
-                path: '/UserAdd',
-                name: 'UserAdd',
-                component: UserAdd
             },
             {
                 path: '/CommentList',

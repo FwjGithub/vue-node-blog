@@ -21,7 +21,7 @@
                     :src="arti.poster"
                 ></el-avatar>
                 <div class="arti-middle">
-                    <div class="arti-title">标题：{{ arti.title }}</div>
+                    <div class="arti-title"> {{ arti.title }} </div>
                     <!-- <div class="arti-content"></div> -->
                     <div class="arti-tags">
                         <el-tag

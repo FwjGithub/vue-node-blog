@@ -19,6 +19,7 @@
                 <el-tag v-for="(tag,i) in tags" :key="i" class="tag" type="plain" @click="cbChoose(tag)">{{
                     tag
                 }}</el-tag> 
+                <el-tag  class="tag" type="plain" @click="cbChoose('')">不分类</el-tag>
             </div>
         </div>
         <div class="calendar">

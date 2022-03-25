@@ -52,8 +52,8 @@ export default {
     methods: {
         async init() {
             this.curRoute = this.$route.path;
-            this.username = localStorage.getItem("username");
-            this.userId = localStorage.getItem("uesrId");
+            this.username = localStorage.getItem("admin_username");
+            this.userId = localStorage.getItem("admin_uesrId");
         },
         handleLogin() {
             this.isShowLogin = true;
@@ -62,8 +62,8 @@ export default {
             this.isShowRegister = true;
         },
         handleExit() {
-            localStorage.removeItem("username");
-            localStorage.removeItem("userId");
+            localStorage.removeItem("admin_username");
+            localStorage.removeItem("admin_userId");
             localStorage.removeItem("isAdmin");
             localStorage.removeItem("isSuper");
             this.username = false;
@@ -73,8 +73,8 @@ export default {
         handleClose(user) {
             if (user && user.username) {
                 this.username = user.username;
-                localStorage.setItem("username", user.username);
-                localStorage.setItem("userId", user._id);
+                localStorage.setItem("admin_username", user.username);
+                localStorage.setItem("admin_userId", user._id);
                 user.isAdmin && localStorage.setItem("isAdmin", 1);
                 user.isSuperAdmin && localStorage.setItem("isSuper", 1);
                 this.$router.go(0);

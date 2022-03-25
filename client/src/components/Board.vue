@@ -1,6 +1,37 @@
 <!--评论模块-->
 <template>
     <div class="comment-container">
+        <!-- <div class="position">首页 > 留言板</div> -->
+        <el-breadcrumb class="position" separator-class="el-icon-arrow-right" >
+            <el-breadcrumb-item :to="{ path: '/' }" > <i class="el-icon-location-outline"></i> 首页</el-breadcrumb-item>
+            <el-breadcrumb-item>留言版</el-breadcrumb-item>
+        </el-breadcrumb>
+        <div class="new-comment">
+            <el-input
+                type="textarea"
+                :rows="3"
+                ref="textarea"
+                placeholder="留下你的建议吧.."
+                v-model="newComment"
+            >
+            </el-input>
+            <div class="commentsTotal">
+                <p>
+                    <i class="iconfont el-icon-chat-round"></i>
+                    <span v-if="commentsTotal">
+                        共 {{ commentsTotal }} 条 留 言
+                    </span>
+                    <span v-else> 暂 无 留 言 </span>
+                </p>
+                <el-button
+                    class="send-msg"
+                    type="primary"
+                    size="small"
+                    @click="handleNewComment"
+                    >点击留言</el-button
+                >
+            </div>
+        </div>
         <div class="comment" v-for="item in comments">
             <div class="info">
                 <img
@@ -42,7 +73,7 @@
                             >@{{ reply.toName }}</span
                         >
                         <span class="to-name" v-else></span>
-                        <span>{{ reply.content }}</span>
+                        <span> {{ reply.content }} </span>
                     </div>
                     <div class="reply-bottom">
                         <span>{{ reply.date }}</span>
@@ -61,7 +92,7 @@
                     @click="showCommentInput(item)"
                 >
                     <i class="el-icon-edit"></i>
-                    <span class="add-comment">添加新评论</span>
+                    <span class="add-comment">补充一下</span>
                 </div>
                 <transition name="fade">
                     <div class="input-wrapper" v-if="showItemId === item._id">
@@ -77,9 +108,9 @@
                         <div class="btn-control">
                             <span class="cancel" @click="cancel">取消</span>
                             <el-button
-                                class="btn"
-                                type="success"
-                                round
+                                class="confirm"
+                                type="primary"
+                                size="small"
                                 @click="commitReply"
                                 >发表</el-button
                             >
@@ -88,39 +119,19 @@
                 </transition>
             </div>
         </div>
-        <div class="new-comment">
-            <p class="commentsTotal">
-                <i class="iconfont el-icon-chat-round"></i>
-                <span v-if="commentsTotal">
-                    共 {{ commentsTotal }} 条 评 论
-                </span>
-                <span v-else> 暂 无 评 论 </span>
-            </p>
-            <el-input
-                type="textarea"
-                :rows="3"
-                ref="textarea"
-                placeholder="发表你的评论"
-                v-model="newComment"
-            >
-            </el-input>
-            <el-button type="success" round @click="handleNewComment"
-                >发表新评论</el-button
-            >
-        </div>
     </div>
 </template>
 
 <script>
 import Vue from "vue";
-import moment from 'moment'
+import moment from "moment";
 export default {
     components: {},
     data() {
         return {
             articleId: "",
             replyComment: "",
-            replyHolder: "写下你的评论...",
+            replyHolder: "给博主提些建议...",
             showItemId: "",
             newComment: "",
             username: localStorage.getItem("username"),
@@ -256,13 +267,6 @@ export default {
          * 提交评论
          */
         async commitReply() {
-            if(!this.userId) {
-                this.$message({
-                    type: "warning",
-                    message: "请先登录~"
-                })
-                return;
-            }
             const replyData = {
                 articleId: this.articleId,
                 commentId: this.showItemId,
@@ -272,7 +276,7 @@ export default {
                     content: this.replyComment,
                     toId: this.replyToId,
                     toName: this.replyToName,
-                    date: Date.now()
+                    date: Date.now(),
                 },
             };
             const { data } = await this.$ajax.post(
@@ -286,7 +290,6 @@ export default {
             }
             // console.log("fanhui :", data);
             this.init();
-
         },
 
         /**
@@ -295,15 +298,17 @@ export default {
          * reply: 当前回复的评论
          */
         showCommentInput(item, reply) {
+            console.log("huifu:", reply);
             if (reply) {
                 this.replyHolder = "@" + reply.fromName + " ";
                 this.replyToId = reply.fromId;
                 this.replyToName = reply.fromName;
             } else {
-                this.replyHolder = "";
+                this.replyHolder = "@" + item.fromName + " ";
                 this.replyToId = item.fromId;
                 this.replyToName = item.fromName;
             }
+
             // this.inputComment = "@" + item.fromName + " ";
             this.showItemId = item._id;
         },
@@ -311,13 +316,6 @@ export default {
         async handleNewComment() {
             // console.log("新评论", this.newComment, "用户id", this.userId, "文章id", this.articleId);
             // return
-            if(!this.userId) {
-                this.$message({
-                    type: "warning",
-                    message: "请先登录~"
-                })
-                return;
-            }
             const commentData = {
                 articleId: this.articleId,
                 fromId: this.userId,
@@ -338,10 +336,13 @@ export default {
             this.init();
         },
         async init() {
-            // 查询评论
-            this.newComment = "";
+            (this.username = localStorage.getItem("username")),
+                (this.userId = localStorage.getItem("userId")),
+                // 查询评论
+                (this.newComment = "");
             this.replyComment = "";
-            this.articleId = this.$route.params.id;
+            this.articleId = "message_board";
+            this.showItemId = ""; //回复评论框隐藏
             const { data: commentData } = await this.$ajax.get(
                 "/api/comment/" + this.articleId
             );
@@ -354,9 +355,10 @@ export default {
 
             this.comments = commentData.data.data.map((item) => {
                 item.date = moment(item.date).format("lll");
-                item.reply.length && item.reply.forEach((re => {
-                    re.date = moment(re.date).format("lll");
-                }))
+                item.reply.length &&
+                    item.reply.forEach((re) => {
+                        re.date = moment(re.date).format("lll");
+                    });
                 return item;
             });
             // console.log(this.comments)
@@ -393,13 +395,40 @@ $border-fourth: #f2f6fc;
 $content-bg-color: #fff;
 
 .comment-container {
-    padding: 0 10px;
     box-sizing: border-box;
+    text-align: left;
+    .position {
+        font-size: 20px;
+        height: 6vh;
+        line-height: 6vh;
+        font-weight: 400!important;
+    }
+    .new-comment {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        margin: 2vh 0;
+        // border-bottom: 1px solid rgba($color: #999, $alpha: 0.1);
+
+        .commentsTotal {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            color: #808080;
+            font-size: 18px;
+            vertical-align: middle;
+            padding: 2vh 0;
+            margin-bottom: 1vh;
+        }
+    }
+
     .comment {
         display: flex;
         flex-direction: column;
-        padding: 10px;
+        padding: 12px;
         border-bottom: 1px solid rgba($color: #123, $alpha: 0.1);
+        background: #fff;
+
         .info {
             display: flex;
             align-items: center;
@@ -534,7 +563,7 @@ $content-bg-color: #fff;
                     align-items: center;
                     padding-top: 10px;
                     .cancel {
-                        font-size: 16px;
+                        font-size: 14px;
                         color: $text-normal;
                         margin-right: 20px;
                         cursor: pointer;
@@ -543,29 +572,10 @@ $content-bg-color: #fff;
                         }
                     }
                     .confirm {
-                        font-size: 16px;
+                        font-size: 14px;
                     }
                 }
             }
-        }
-    }
-
-    .new-comment {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: flex-end;
-        margin: 3vh 0;
-        .el-button {
-            margin-top: 2vh;
-            margin-bottom: 3vh;
-        }
-        .commentsTotal {
-            align-self: flex-start;
-            color: #808080;
-            font-size: 18px;
-            height: 6vh;
-            line-height: 6vh;
         }
     }
 }

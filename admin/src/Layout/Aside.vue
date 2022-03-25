@@ -13,10 +13,10 @@
                     <i class="el-icon-monitor"></i>
                     <span slot="title">首页</span>
                 </el-menu-item>
-                <!-- <el-menu-item index="/CommentList">
-                    <i class="el-icon-menu"></i>
-                    <span slot="title">评论留言</span>
-                </el-menu-item> -->
+                <el-menu-item index="/CommentList">
+                    <i class="el-icon-message"></i>
+                    <span slot="title">留言管理</span>
+                </el-menu-item>
                 <el-menu-item :disabled="!isAdmin" index="/TagList">
                     <i class="el-icon-price-tag"></i>
                     <span slot="title">标签管理</span>
@@ -79,5 +79,9 @@ export default {
 .el-menu-item {
     height: 8vh!important;
     line-height: 8vh!important;
+}
+.el-icon-price-tag{
+    display: inline-block;
+    transform: rotate(-45deg);
 }
 </style>

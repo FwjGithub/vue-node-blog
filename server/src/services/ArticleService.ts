@@ -71,6 +71,25 @@ export default class ArticleService {
         }
     }
 
+    public static async getHotList(): Promise<any[]> {
+        const result = await ArticleModel.find({})
+            .sort({ views: -1 })
+            .limit(10);
+            // .map(item => {
+            //     return {
+            //         _id: item._id,
+            //         title: item.title
+            //     }
+            // })
+        // console.log("hot:", result);
+        return result.map(item => {
+            return {
+                _id: item._id,
+                title: item.title,
+                views: item.views
+            }
+        });
+    }
     public static async remove(id: string): Promise<boolean> {
         const result = await ArticleModel.findOne({
             _id: id,

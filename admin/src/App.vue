@@ -7,13 +7,13 @@
 export default {
     methods: {
         async init() {
-            const userId = localStorage.getItem("userId");
-            if(!userId) {
+            const admin_userId = localStorage.getItem("admin_userId");
+            if(!admin_userId) {
                 this.$route.path != "/" && this.$router.push('/')
                 console.log("App..用户状态：未登录")
                 return;
             }
-            // const {data} = await this.$ajax.get('/api/user/' + userId)
+            // const {data} = await this.$ajax.get('/api/user/' + admin_userId)
             // if(!data.code) {
             //     console.log("App..用户状态：已登录获取用户信息失败")
             //     return

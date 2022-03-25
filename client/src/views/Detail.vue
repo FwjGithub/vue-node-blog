@@ -1,9 +1,9 @@
 <template>
     <div class="bg-container">
         <div class="detail-container">
-            <el-page-header @back="goBack" content="详情页面"></el-page-header>
+            <el-page-header @back="goBack" class="detail-title" :content="articleObj.title"></el-page-header>
 
-            <div class="detail-title">{{ articleObj.title }}</div>
+            <!-- <div class="detail-title">{{ articleObj.title }}</div> -->
             <mavon-editor
                 v-model="articleObj.content"
                 ref="md"
@@ -20,7 +20,9 @@
                     <i class="el-icon-view"></i> 浏览： {{ articleObj.views }}
                 </p>
             </div>
-            <comment />
+            <div class="detail-comment">
+                <comment />
+            </div>
 
         </div>
 
@@ -80,7 +82,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style >
 .bg-container {
     /* min-height: 300vh; */
     width: 100%;
@@ -94,24 +96,32 @@ export default {
     display: flex;
     flex-direction: column;
     text-align: left;
+    background-color: #fff;
 }
 .el-page-header {
     background: #fff;
     padding: 3vh;
     margin-top: -1px !important;
 }
-.detail-title {
-    font-size: 36px;
-    font-weight: 600;
-    margin: 6vh 0;
+.el-page-header .el-page-header__content,
+.el-page-header .el-page-header__title {
+    font-size: 26px !important;
+    font-weight: 500;
+    /* margin: 6vh 0; */
+    /* padding: 0 2vw; */
 }
 .detail-msg {
     font-size: 18px;
     text-align: right;
     color: grey;
-    padding: 3vh 0;
+    padding: 3vh 3vw;
+    background-color: #f4f5f5;
+
 }
 .detail-msg p {
     line-height: 6vh;
+}
+.detail-comment {
+    border-bottom: 1px solid rgba(99, 99, 99, .2)
 }
 </style>
