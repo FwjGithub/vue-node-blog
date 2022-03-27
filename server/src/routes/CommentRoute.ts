@@ -6,7 +6,7 @@ const router = Express.Router();
 router.get("/:articleId", async (req, resp) => {
     // console.log("req", req);
     // console.log("articleId", req.param, req.query);
-    const result = await CommentService.getComment(req.params.articleId);
+    const result = await CommentService.getComment(req.params.articleId, req.query);
     // 这里与其他返回的判断逻辑不一样，如果是数组就返回即可
     if (Array.isArray(result)) {
         ResponseHelper.sendError(result, resp);
@@ -14,7 +14,11 @@ router.get("/:articleId", async (req, resp) => {
         ResponseHelper.sendData(result, resp);
     }
 });
-
+router.delete("/:commentId", async (req, resp) => {
+    // console.log("commentId:", req.params.commentId)
+    await CommentService.remove(req.params.commentId);
+    ResponseHelper.sendData(true, resp);
+});
 router.post("/add", async (req, resp) => {
     // console.log("req", req);
     // console.log("req.body", req.body);

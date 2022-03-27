@@ -86,6 +86,8 @@ export default {
 .bg-container {
     /* min-height: 300vh; */
     width: 100%;
+    padding: 2vh;
+    box-sizing: border-box;
     /* background-image: url("/pic/bgpic1.jpg") ; */
     /* background: rgba(0, 0, 0, .5) url("/pic/bgpic1.jpg")  no-repeat  fixed  top ;
     background-size: cover; */

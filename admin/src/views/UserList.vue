@@ -11,6 +11,7 @@
                     <el-switch
                         @change="handleSwitch(scope.$index, scope.row)"
                         v-model="scope.row.isAdmin"
+                        :disabled="scope.row.username == 'jacky'"
                     >
                     </el-switch>
                 </template>
@@ -24,6 +25,7 @@
                     <el-switch
                         @change="handleSwitch(scope.$index, scope.row)"
                         v-model="scope.row.isSuperAdmin"
+                        :disabled="scope.row.username == 'jacky'"
                     >
                     </el-switch>
                 </template>
@@ -48,6 +50,7 @@
                         size="mini"
                         type="danger"
                         @click="handleDelete(scope.$index, scope.row)"
+                        :disabled="scope.row.username == 'jacky'"
                         >注销该用户</el-button
                     >
                 </template>

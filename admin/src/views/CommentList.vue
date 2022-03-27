@@ -1,51 +1,25 @@
 <!--评论模块-->
 <template>
     <div class="comment-container">
-        <!-- <div class="position">首页 > 留言板</div> -->
-        <!-- <el-breadcrumb class="position" separator-class="el-icon-arrow-right" >
-            <el-breadcrumb-item :to="{ path: '/' }" > <i class="el-icon-location-outline"></i> 首页</el-breadcrumb-item>
-            <el-breadcrumb-item>留言版</el-breadcrumb-item>
-        </el-breadcrumb> -->
-        <!-- <div class="new-comment">
-            <el-input
-                type="textarea"
-                :rows="3"
-                ref="textarea"
-                placeholder="留下你的建议吧.."
-                v-model="newComment"
-            >
-            </el-input>
-            <div class="commentsTotal">
-                <p>
-                    <i class="iconfont el-icon-chat-round"></i>
-                    <span v-if="commentsTotal">
-                        共 {{ commentsTotal }} 条 留 言
-                    </span>
-                    <span v-else> 暂 无 留 言 </span>
-                </p>
-                <el-button
-                    class="send-msg"
-                    type="primary"
-                    size="small"
-                    @click="handleNewComment"
-                    >点击留言</el-button
-                >
-            </div>
-        </div> -->
-        <div class="comment" v-for="item in comments">
-            <div class="info">
-                <img
-                    class="user-avatar"
-                    :src="item.fromAvatar"
-                    width="36"
-                    height="36"
-                />
-                <div class="right">
-                    <div class="name">{{ item.fromName }}</div>
-                    <div class="date">{{ item.date }}</div>
+        <div class="comment" v-for="item in comments" :key="item._id">
+            <div class="top-info">
+                <div class="info">
+                    <img
+                        class="user-avatar"
+                        :src="item.fromAvatar"
+                        width="36"
+                        height="36"
+                    />
+                    <div class="right">
+                        <div class="name">{{ item.fromName }}</div>
+                        <div class="date">{{ item.date }}</div>
+                    </div>
+                </div>
+                <div class="delete" @click="handleDelete(item._id)">
+                    删除此留言
                 </div>
             </div>
-            <div class="content">{{ item.content }}</div>
+            <div class="comment-content">{{ item.content }}</div>
             <div class="control">
                 <!-- <span
                     class="like"
@@ -119,6 +93,15 @@
                 </transition>
             </div>
         </div>
+        <el-pagination
+            :page-size="searchCondition.limit"
+            layout="prev, pager, next, jumper"
+            :total="commentsTotal"
+            :current-page="searchCondition.page"
+            @current-change="handleChange"
+            @prev-click="handleChange"
+            @next-click="handleChange"
+        ></el-pagination>
     </div>
 </template>
 
@@ -235,6 +218,10 @@ export default {
                 },
             ],
             commentsTotal: 0,
+            searchCondition: {
+                page: 1, //当前页
+                limit: 5, //每页
+            },
         };
     },
     computed: {},
@@ -335,6 +322,43 @@ export default {
             console.log(data);
             this.init();
         },
+        async handleChange(cur) {
+            // console.log("改变页数", cur)
+            if(cur === -1) {
+                this.searchCondition.page -= cur;
+            }else {
+                this.searchCondition.page = cur;
+            }
+            this.init();
+        },
+        async handleDelete(id) {
+            this.$confirm("此操作将永久删除该留言, 是否继续?", "提示", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                type: "warning",
+            })
+                .then( async () => {
+                    const { data } = await this.$ajax.delete("/api/comment/" + id);
+                    if(this.comments.length === 1){
+                        this.handleChange()
+                    }
+                    this.$message({
+                        type: "success",
+                        message: "删除成功!",
+                    });
+                    this.init();
+                    this.$message({
+                        type: "success",
+                        message: "删除成功!",
+                    });
+                })
+                .catch(() => {
+                    this.$message({
+                        type: "info",
+                        message: "已取消删除",
+                    });
+                });
+        },
         async init() {
             (this.username = localStorage.getItem("username")),
                 (this.userId = localStorage.getItem("userId")),
@@ -344,7 +368,10 @@ export default {
             this.articleId = "message_board";
             this.showItemId = ""; //回复评论框隐藏
             const { data: commentData } = await this.$ajax.get(
-                "/api/comment/" + this.articleId
+                "/api/comment/" + this.articleId,
+                {
+                    params: this.searchCondition,
+                }
             );
             // console.log("评论数据", result);
             // console.log(commentData)
@@ -397,11 +424,20 @@ $content-bg-color: #fff;
 .comment-container {
     box-sizing: border-box;
     text-align: left;
+    min-width: 600px;
+    width: 65%;
+    flex-direction: column;
+    margin: 0 auto;
+    display: flex;
+    .el-pagination {
+        align-self: flex-end;
+        margin-top: 2vh;
+    }
     .position {
         font-size: 20px;
         height: 6vh;
         line-height: 6vh;
-        font-weight: 400!important;
+        font-weight: 400 !important;
     }
     .new-comment {
         display: flex;
@@ -428,30 +464,41 @@ $content-bg-color: #fff;
         padding: 12px;
         border-bottom: 1px solid rgba($color: #123, $alpha: 0.1);
         background: #fff;
-
-        .info {
+        .top-info {
             display: flex;
-            align-items: center;
-            .user-avatar {
-                border-radius: 50%;
-            }
-            .right {
+            justify-content: space-between;
+
+            .info {
                 display: flex;
-                flex-direction: column;
-                margin-left: 10px;
-                .name {
-                    font-size: 16px;
-                    color: $text-main;
-                    margin-bottom: 5px;
-                    font-weight: 500;
+                align-items: center;
+                .user-avatar {
+                    border-radius: 50%;
                 }
-                .date {
-                    font-size: 12px;
-                    color: $text-minor;
+                .right {
+                    display: flex;
+                    flex-direction: column;
+                    margin-left: 10px;
+                    .name {
+                        font-size: 16px;
+                        color: $text-main;
+                        margin-bottom: 5px;
+                        font-weight: 500;
+                    }
+                    .date {
+                        font-size: 12px;
+                        color: $text-minor;
+                    }
+                }
+            }
+            .delete {
+                cursor: pointer;
+                color: $color-main;
+                &:hover {
+                    color: $color-danger;
                 }
             }
         }
-        .content {
+        .comment-content {
             font-size: 16px;
             color: $text-main;
             line-height: 20px;

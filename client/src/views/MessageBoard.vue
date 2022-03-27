@@ -81,14 +81,13 @@ export default {
     width: 80%;
     justify-content: space-between;
     margin: 0 auto;
+    padding: 3vh 0;
     .left {
-        margin-top: 3vh;
-        width: 70%;
+        width: 60%;
         margin-right: 3vw;
     }
     .right {
         width: 30%;
-        margin-top: 3vh;
         text-align: left;
         .new {
             margin-bottom: 6vh;

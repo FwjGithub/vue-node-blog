@@ -13,7 +13,7 @@
                     <i class="el-icon-monitor"></i>
                     <span slot="title">首页</span>
                 </el-menu-item>
-                <el-menu-item index="/CommentList">
+                <el-menu-item :disabled="!isAdmin" index="/CommentList">
                     <i class="el-icon-message"></i>
                     <span slot="title">留言管理</span>
                 </el-menu-item>

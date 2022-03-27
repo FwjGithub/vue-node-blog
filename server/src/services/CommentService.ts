@@ -4,15 +4,15 @@ import { IComment } from "../db/CommentSchema";
 import SearchCondition from "../entities/SearchCondition";
 import { ISearchResult } from "../entities/CommonTypes";
 export default class CommentService {
-    public static async getComment(articleId: string): Promise<object | any[]> {
+    public static async getComment(articleId: string, condition: any): Promise<object | any[]> {
         console.log("查询评论", articleId);
         const result = await CommentModel.find({
             $or: [
                 { articleId: new RegExp(articleId) }
             ],
         })
-            // .skip((condition.page - 1) * condition.limit)
-            // .limit(condition.limit)
+            .skip((+condition.page - 1) * +condition.limit)
+            .limit(+condition.limit)
             .sort({
                 date: -1,
             });
@@ -24,7 +24,6 @@ export default class CommentService {
             data: result,
             errors: [],
         };
-        return [];
     }
     public static async addComment(comment: Comment): Promise<IComment | string[]> {
         console.log("增加评论")
@@ -46,5 +45,15 @@ export default class CommentService {
         })
 
         return result;
+    }
+
+    public static async remove(id: string): Promise<boolean> {
+        // const tags = result.tags;
+        // console.log("removeArticle：", result?.tags);
+        // tslint:disable-next-line: no-unused-expression
+        await CommentModel.deleteOne({
+            _id: id,
+        });
+        return true;
     }
 }

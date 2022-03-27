@@ -1,33 +1,41 @@
 <template>
     <div class="user">
-        <div v-if="username">
-            <el-avatar
-                class="avatar"
-                size="medium"
-                :src="circleUrl"
-            ></el-avatar>
-            <span class="username">{{ username }}</span>
-            <el-button
-                class="exit-btn"
-                type="danger"
-                @click="handleExit"
-                size="mini"
-                >重新登录</el-button
-            >
+        <div class="blog-title">
+            杰克个人博客管理后台
         </div>
-        <div v-else>
-            <el-button @click="handleLogin" type="success" size="mini"
-                >登录</el-button
-            >
-            <el-button @click="handleRegister" type="primary" size="mini"
-                >注册</el-button
-            >
+        <div>
+            <div v-if="username">
+                <el-avatar
+                    class="avatar"
+                    size="medium"
+                    :src="circleUrl"
+                ></el-avatar>
+                <span class="username">{{ username }}</span>
+                <el-button
+                    class="exit-btn"
+                    type="danger"
+                    @click="handleExit"
+                    size="mini"
+                    >退出登录</el-button
+                >
+            </div>
+            <div v-else>
+                <span class="please-login">
+                    你好,请登录
+                </span>
+                <el-button @click="handleLogin" type="success" size="mini"
+                    >登录</el-button
+                >
+                <el-button @click="handleRegister" type="primary" size="mini"
+                    >注册</el-button
+                >
+            </div>
+            <login :isShowing="isShowLogin" :handleClose="handleClose"></login>
+            <register
+                :isShowing="isShowRegister"
+                :handleClose="handleClose"
+            ></register>
         </div>
-        <login :isShowing="isShowLogin" :handleClose="handleClose"></login>
-        <register
-            :isShowing="isShowRegister"
-            :handleClose="handleClose"
-        ></register>
     </div>
 </template>
 
@@ -107,7 +115,7 @@ export default {
     width: calc(100vw-200px);
     box-sizing: border-box;
     padding: 0 1vw;
-    justify-content: flex-end;
+    justify-content: space-between;
     margin: 0 auto;
     height: 8vh;
     line-height: 8vh;
@@ -116,6 +124,17 @@ export default {
 .username {
     margin: 0 20px;
     font-weight: 500;
+    color: #3c3c3c;
+}
+.blog-title{
+    font-size: 18px;
+    font-weight: 500;
+}
+.please-login {
+    font-size: 14px;
+    font-weight: 500;
+    margin-right: 2vw;
+    color: rgb(102, 97, 97);
 }
 .avatar {
     vertical-align: middle;

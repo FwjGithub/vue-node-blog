@@ -119,6 +119,15 @@
                 </transition>
             </div>
         </div>
+        <el-pagination
+            :page-size="searchCondition.limit"
+            layout="prev, pager, next, jumper"
+            :total="commentsTotal"
+            :current-page="searchCondition.page"
+            @current-change="handleChange"
+            @prev-click="handleChange"
+            @next-click="handleChange"
+        ></el-pagination>
     </div>
 </template>
 
@@ -235,6 +244,10 @@ export default {
                 },
             ],
             commentsTotal: 0,
+            searchCondition: {
+                page: 1, //当前页
+                limit: 5, //每页
+            },
         };
     },
     computed: {},
@@ -335,6 +348,15 @@ export default {
             console.log(data);
             this.init();
         },
+        async handleChange(cur) {
+            // console.log("改变页数", cur)
+            if(cur === -1) {
+                this.searchCondition.page -= cur;
+            }else {
+                this.searchCondition.page = cur;
+            }
+            this.init();
+        },
         async init() {
             (this.username = localStorage.getItem("username")),
                 (this.userId = localStorage.getItem("userId")),
@@ -344,7 +366,10 @@ export default {
             this.articleId = "message_board";
             this.showItemId = ""; //回复评论框隐藏
             const { data: commentData } = await this.$ajax.get(
-                "/api/comment/" + this.articleId
+                "/api/comment/" + this.articleId,
+                {
+                    params: this.searchCondition
+                }
             );
             // console.log("评论数据", result);
             // console.log(commentData)
@@ -397,6 +422,8 @@ $content-bg-color: #fff;
 .comment-container {
     box-sizing: border-box;
     text-align: left;
+    display: flex;
+    flex-direction: column;
     .position {
         font-size: 20px;
         height: 6vh;
@@ -425,7 +452,7 @@ $content-bg-color: #fff;
     .comment {
         display: flex;
         flex-direction: column;
-        padding: 12px;
+        padding: 18px;
         border-bottom: 1px solid rgba($color: #123, $alpha: 0.1);
         background: #fff;
 
@@ -577,6 +604,11 @@ $content-bg-color: #fff;
                 }
             }
         }
+    }
+
+    .el-pagination{
+        margin-top: 1vh;
+        align-self: flex-end;
     }
 }
 </style>

@@ -59,7 +59,7 @@ export default {
     background-color: #f4f5f5;
     color: #333;
     text-align: center;
-    min-height: 180vh;
+    /* min-height: 180vh; */
 
     /* line-height: 160px; */
     padding: 0 !important;
