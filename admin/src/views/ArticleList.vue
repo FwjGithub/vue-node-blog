@@ -40,12 +40,14 @@
                 <template slot-scope="scope">
                     <el-button
                         size="mini"
+                        :disabled="!isSuper"
                         @click="handleEdit(scope.$index, scope.row)"
                         >编辑</el-button
                     >
                     <el-button
                         size="mini"
                         type="danger"
+                        :disabled="!isSuper"
                         @click="handleDelete(scope.$index, scope.row)"
                         >删除</el-button
                     >
@@ -110,6 +112,7 @@ export default {
             page: 1,
             limit: 5,
             total: 0,
+            isSuper: false
         };
     },
     methods: {
@@ -143,7 +146,7 @@ export default {
         },
         async init() {
             const data = await ArticleAjax.findByPage(this.searchCondition);
-
+            this.isSuper = !!localStorage.getItem("isSuper");
             this.tableData = data.data;
             // console.log(this.tableData)
             this.total = data.count;
@@ -152,7 +155,7 @@ export default {
             // console.log("改变页数", cur)
             this.searchCondition.page = cur;
             const data = await ArticleAjax.findByPage(this.searchCondition);
-
+            
             this.tableData = data.data;
             // console.log(this.tableData)
             this.total = data.count;

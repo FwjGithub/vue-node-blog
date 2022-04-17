@@ -329,6 +329,10 @@ export default {
         async handleNewComment() {
             // console.log("新评论", this.newComment, "用户id", this.userId, "文章id", this.articleId);
             // return
+            if(!localStorage.getItem("username")) {
+                this.$message("请先登录~");
+                return;
+            }
             const commentData = {
                 articleId: this.articleId,
                 fromId: this.userId,

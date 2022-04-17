@@ -125,14 +125,20 @@ export default {
                 border-radius: 2px;
                 margin-right: 1vw;
                 // width: 2vh;
-                padding: 3px 8px;
+                // padding: 3px 8px;
+                width: 22px;
+                height: 22px;
+                line-height: 22px;
+                display: inline-block;
+                text-align: center;
                 // height: 2vh;
                 // line-height: 2vh;
-                background: rgba(188, 99, 99, 0.9);
+                // background: rgba(188, 99, 99, 0.9);
+                background: rgba(114, 121, 221, 0.9);
                 color: #fff;
-                &:first-of-type {
-                    background: rgba(114, 121, 221, 0.9);
-                }
+                // &:first-of-type {
+                //     background: rgba(114, 121, 221, 0.9);
+                // }
                 // &:nth-of-type(3) {
                 //     background: rgba(99, 105, 188, 0.9);
                 // }

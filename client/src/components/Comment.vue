@@ -342,6 +342,7 @@ export default {
             this.newComment = "";
             this.replyComment = "";
             this.articleId = this.$route.params.id;
+            this.showItemId = null;
             const { data: commentData } = await this.$ajax.get(
                 "/api/comment/" + this.articleId
             );

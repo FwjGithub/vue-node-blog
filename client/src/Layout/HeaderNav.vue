@@ -83,6 +83,7 @@ export default {
             localStorage.removeItem('username');
             localStorage.removeItem('userId');
             this.username = false
+            this.$router.go(0);  
         },
         handleClose(user) {
             if (user && user.username) {

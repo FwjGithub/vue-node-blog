@@ -117,8 +117,8 @@ export default {
             replyHolder: "给博主提些建议...",
             showItemId: "",
             newComment: "",
-            username: localStorage.getItem("username"),
-            userId: localStorage.getItem("userId"),
+            username: localStorage.getItem("admin_username"),
+            userId: localStorage.getItem("admin_userId"),
             comments: [
                 {
                     id: "comment0001", //主键id
@@ -222,6 +222,7 @@ export default {
                 page: 1, //当前页
                 limit: 5, //每页
             },
+            isSuper: false
         };
     },
     computed: {},
@@ -338,6 +339,13 @@ export default {
                 type: "warning",
             })
                 .then( async () => {
+                    if (!this.isSuper) {
+                        this.$message({
+                            type: "error",
+                            message: "只有超级管理员才能删除留言",
+                        });
+                        return;
+                    }
                     const { data } = await this.$ajax.delete("/api/comment/" + id);
                     if(this.comments.length === 1){
                         this.handleChange()
@@ -360,8 +368,9 @@ export default {
                 });
         },
         async init() {
-            (this.username = localStorage.getItem("username")),
-                (this.userId = localStorage.getItem("userId")),
+            this.isSuper = !!localStorage.getItem("isSuper");
+            (this.username = localStorage.getItem("admin_username")),
+                (this.userId = localStorage.getItem("admin_userId")),
                 // 查询评论
                 (this.newComment = "");
             this.replyComment = "";

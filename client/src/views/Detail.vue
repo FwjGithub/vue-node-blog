@@ -105,13 +105,17 @@ export default {
     padding: 3vh;
     margin-top: -1px !important;
 }
-.el-page-header .el-page-header__content,
 .el-page-header .el-page-header__title {
-    font-size: 26px !important;
+    font-size: 22px !important;
     font-weight: 500;
+}
+.el-page-header .el-page-header__content {
+    font-size: 26px !important;
+    font-weight: 600;
     /* margin: 6vh 0; */
     /* padding: 0 2vw; */
 }
+
 .detail-msg {
     font-size: 18px;
     text-align: right;

@@ -38,6 +38,7 @@
                     <mavon-editor
                         v-model="content"
                         ref="md"
+                        @imgAdd="$imgAdd"
                         @change="change"
                         class="md-editor"
                         style="min-height: 700px; width: 100%"
@@ -83,6 +84,30 @@ export default {
         change(value, render) {
             // render 为 markdown 解析后的结果[html]
             this.html = render;
+        },
+        //插入图片
+        $imgAdd(pos, $file) {
+            // 第一步.将图片上传到服务器.
+            var formdata = new FormData();
+            formdata.append("imgfile", $file);
+            axios({
+                url: "/admin/upload",
+                method: "post",
+                data: formdata,
+                headers: { "Content-Type": "multipart/form-data" },
+            }).then(({ data }) => {
+                // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
+                // $vm.$img2Url 详情见本页末尾
+                if (!data.code) {
+                    this.$message({
+                        type: "error",
+                        message: data.err,
+                    });
+                    return;
+                }
+
+                this.$refs.md.$img2Url(pos, data.data);
+            });
         },
         // 提交
         async submit() {

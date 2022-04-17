@@ -19,7 +19,7 @@
                 >+ 新增标签</el-button
             >
         </div>
-        <el-table :data="tagsData" style="width: 100%"  border>
+        <el-table :data="tagsData" style="width: 100%" border>
             <el-table-column align="center" label="标签">
                 <template slot-scope="scope">
                     <el-tag
@@ -29,8 +29,16 @@
                     >
                 </template>
             </el-table-column>
-            <el-table-column align="center" label="文章数量" prop="count"></el-table-column>
-            <el-table-column align="center" label="创建日期" prop="date"></el-table-column>
+            <el-table-column
+                align="center"
+                label="文章数量"
+                prop="count"
+            ></el-table-column>
+            <el-table-column
+                align="center"
+                label="创建日期"
+                prop="date"
+            ></el-table-column>
             <el-table-column align="center" label="操作">
                 <!-- <template slot="header" slot-scope="scope">
                     <el-input
@@ -110,6 +118,7 @@ export default {
             page: 1,
             limit: 5,
             total: 0,
+            isSuper: false,
         };
     },
     computed: {
@@ -163,16 +172,23 @@ export default {
                     //     });
                     //     return;
                     // }
+                    if (!this.isSuper) {
+                        this.$message({
+                            type: "error",
+                            message: "只有超级管理员才能删除标签",
+                        });
+                        return;
+                    }
                     const { data } = await this.$ajax.delete(
                         "/api/tag/" + row._id
                     );
-                    if(!data.code) {
+                    if (!data.code) {
                         this.$message({
                             type: "error",
                             message: data.err,
                         });
                         console.log("删除结果：", data);
-                        return
+                        return;
                     }
 
                     this.$message({
@@ -190,6 +206,7 @@ export default {
                 });
         },
         async init() {
+            this.isSuper = !!localStorage.getItem("isSuper");
             const { data } = await this.$ajax.get(
                 "/api/tag",
                 this.searchCondition
