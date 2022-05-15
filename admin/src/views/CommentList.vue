@@ -350,10 +350,10 @@ export default {
                     if(this.comments.length === 1){
                         this.handleChange()
                     }
-                    this.$message({
-                        type: "success",
-                        message: "删除成功!",
-                    });
+                    // this.$message({
+                    //     type: "success",
+                    //     message: "删除成功!",
+                    // });
                     this.init();
                     this.$message({
                         type: "success",
